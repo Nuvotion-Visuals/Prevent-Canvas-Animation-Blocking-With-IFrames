@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "4999:4999"
+      - "5000:5000"
