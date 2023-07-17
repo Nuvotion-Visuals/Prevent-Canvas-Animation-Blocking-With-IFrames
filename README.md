@@ -2,6 +2,12 @@
 
 This example demonstrates how to implement a canvas animation in a separate JavaScript execution context - an iframe - that can run independently from the parent document's main thread. This approach ensures that, even if the main thread in the parent document is blocked or busy, the iframe's animation continues to run smoothly.
 
+## Getting started
+
+1. `git clone https://github.com/AVsync-LIVE/Prevent-Canvas-Animation-Blocking-With-IFrames.git`
+2. `node index.js` or `docker compose up -d`
+3. Visit `http://localhost:4999`
+
 ## Explanation
 
 ### Animation Inside an Iframe
