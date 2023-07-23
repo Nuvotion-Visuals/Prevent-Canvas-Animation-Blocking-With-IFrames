@@ -40,6 +40,7 @@ const animationScript = `
 
 const mainPageServer = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Origin-Agent-Cluster', '?1');
 
   if (req.url === '/') {
     res.end(`
@@ -56,6 +57,9 @@ const mainPageServer = http.createServer((req, res) => {
         </head>
         <body>
             <h1>Prevent Canvas Animation Blocking with IFrames: An OffscreenCanvas Alternative</h1>
+
+            <a href="https://github.com/AVsync-LIVE/Prevent-Canvas-Animation-Blocking-With-IFrames" target="_blank">View on GitHub</a>
+
             <p>
                 This example demonstrates how to implement a canvas animation in a separate JavaScript execution context - an iframe - that can run independently from the parent document's main thread. This approach ensures that, even if the main thread in the parent document is blocked or busy, the iframe's animation continues to run smoothly.
             </p>
@@ -78,6 +82,12 @@ const mainPageServer = http.createServer((req, res) => {
             <h3>Inter-Context Communication</h3>
             <p>
                 Communication between the parent document and the iframe is enabled via the postMessage() method and 'message' event listeners. This functionality allows for the sending and receiving of data between the two separate JavaScript execution contexts, demonstrating not just independence, but also interactivity and communication capabilities between them.
+            </p>
+            <h3>Role of Origin-Agent-Cluster Header</h3>
+            <p>
+            The <code>Origin-Agent-Cluster</code> header serves a vital role in enabling the separate execution environments of the parent document and the iframe, facilitating their independent operation. By establishing distinct agent clusters, this header ensures that thread blockage or lag in one entity doesn't impact the other's performance, preserving the smooth run of iframe animations even amidst heavy operations on the main page. Interestingly, it only needs to be enabled in either the parent or the iframe server. If a document is served with the <code>Origin-Agent-Cluster: ?1</code> response header, a new agent cluster is created for that origin. 
+            </p>
+            <p>Any iframes from the same origin are also included in this cluster, unless they too incorporate the <code>Origin-Agent-Cluster</code> header, leading to their separate clusters. Despite potential implications for memory usage—each agent cluster has its own JavaScript realm with all built-in objects and functions--the benefits of thread isolation, particularly for applications requiring continuous, smooth animations, often outweigh these memory costs.
             </p>
             <h3>Practical Benefits</h3>
             <p>
@@ -147,12 +157,13 @@ const mainPageServer = http.createServer((req, res) => {
   }
 });
 
-mainPageServer.listen(4999, () => {
+mainPageServer.listen(4999, (req, res) => {
   console.log('Main page server listening on port 4999');
 });
 
 const iframeServer = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Origin-Agent-Cluster', '?1');
 
   if (req.url === '/') {
     res.end(`
@@ -205,5 +216,6 @@ const iframeServer = http.createServer((req, res) => {
 });
 
 iframeServer.listen(5000, () => {
+
   console.log('Iframe server listening on port 5000');
 });
