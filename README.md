@@ -18,6 +18,10 @@ Both the parent document and the child iframe have a canvas running a bouncing b
 
 Communication between the parent document and the iframe is enabled via the `postMessage()` method and 'message' event listeners. This functionality allows for the sending and receiving of data between the two separate JavaScript execution contexts, demonstrating not just independence, but also interactivity and communication capabilities between them.
 
+ ### Role of Origin-Agent-Cluster Header
+
+The `Origin-Agent-Cluster` header serves a vital role in enabling the separate execution environments of the parent document and the iframe, facilitating their independent operation. By establishing distinct agent clusters, this header ensures that thread blockage or lag in one entity doesn't impact the other's performance, preserving the smooth run of iframe animations even amidst heavy operations on the main page. Interestingly, it only needs to be enabled in either the parent or the iframe server. If a document is served with the `Origin-Agent-Cluster: ?1` response header, a new agent cluster is created for that origin. 
+            
 ### Practical Benefits
 
 This approach is particularly useful for running scripts requiring DOM access, such as those involving video textures. Such use cases might not be compatible with solutions like Web Workers or OffscreenCanvas, which do not have access to the DOM. Running such scripts inside an iframe can provide a way around these limitations.
